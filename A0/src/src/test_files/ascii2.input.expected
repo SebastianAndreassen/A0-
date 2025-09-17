@@ -1,1 +1,1 @@
-test_files/ascii2.input: ASCII text
+test_files/ascii2.input: ASCII text, with no line terminators
