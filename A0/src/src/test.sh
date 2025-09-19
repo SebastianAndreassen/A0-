@@ -23,6 +23,8 @@ printf "" > test_files/empty.input
 printf "Hej, Verden – ø æ å\n" > test_files/utf8.input
 # UTF-8 Unicode (CJK)
 printf "你好，世界\n" > test_files/utf8_chinese.input
+# UTF-8 Unicode (1-4 bytes)
+printf "AĀअ𐍈\n" > test_files/utf8_mixed.input
 
 # Secret file
 printf "hemmelighed" > test_files/hemmelig.input
