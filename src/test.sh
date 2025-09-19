@@ -34,7 +34,7 @@ for f in test_files/*.input; do
   echo ">>> Testing ${f}.."
 
   # Normalize common variations from system 'file' output to canonical labels
-  file "${f}" | sed -e 's/ASCI text.*/ASCI text/' \
+  file "${f}" | sed -e 's/ASCII text.*/ASCII text/' \
                     -e 's/UTF-8 Unicode text.*/UTF-8 Unicode text/' \
                     -e 's/Unicode text, UTF-8 text.*/UTF-8 Unicode text/' \
                     -e 's/ISO-885 text.*/ISO-885 text/' \
