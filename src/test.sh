@@ -23,23 +23,35 @@ printf "" > test_files/empty.input
 printf "Hej, Verden – ø æ å\n" > test_files/utf8.input
 # UTF-8 Unicode (CJK)
 printf "你好，世界\n" > test_files/utf8_chinese.input
+# UTF-8 Unicode (1-4 bytes)
+printf "AĀअ𐍈\n" > test_files/utf8_mixed.input
+
+# Secret file
+printf "hemmelighed" > test_files/hemmelig.input
+chmod 000 test_files/hemmelig.input
+
 
 # ISO-8859-1 (Latin-1) — use iconv to force encoding
 printf "Héllo, wörld!\n" | iconv -t ISO-8859-1 > test_files/iso8859.input
 printf "España\n" | iconv -t ISO-8859-1 > test_files/iso8859_spanish.input
+printf 'Latin-1: \xE9 \xF1 \xA0\n' > test_files/iso8859_bytes.input
+printf '\xE9\n' > test_files/iso8859_e9_only.input
+hexdump -C test_files/iso8859_e9_only.input
+LC_ALL=C file test_files/iso8859_e9_only.input
+file -i test_files/iso8859_e9_only.input
 
 echo "Running the tests.."
 exitcode=0
-for f in test_files/*.input; do
+for f in test_files/*.input test_files/does_not_exist.input; do
   echo ">>> Testing ${f}.."
 
-  # Normalize common variations from system 'file' output to canonical labels
+
   file "${f}" | sed -e 's/ASCII text.*/ASCII text/' \
-                    -e 's/UTF-8 Unicode text.*/UTF-8 Unicode text/' \
-                    -e 's/Unicode text, UTF-8 text.*/UTF-8 Unicode text/' \
-                    -e 's/ISO-885 text.*/ISO-885 text/' \
-                    -e 's/writable, regular file, no read permission/cannot determine (Permission denied)/' \
-                    > "${f}.expected"
+                  -e 's/Unicode text, UTF-8 text.*/UTF-8 Unicode text/' \
+                  -e 's/ISO-8859 text.*/ISO-8859 text/' \
+                  -e 's/regular file, no read permission*/cannot determine (Permission denied)/' \
+                  -e 's|^\([^:]*\): cannot open .*(No such file or directory).*|\1: cannot determine (No such file or directory)|' \
+> "${f}.expected"
 
   ./file "${f}" > "${f}.actual"
 
